@@ -6,10 +6,13 @@ fn main() {
     internal(process);
 }
 
-fn internal<T: Injection>(process: T) {
-    process
-        .inject("/home/tom/Git/injector/examples/internal/target/debug/libinternal.so")
-        .unwrap();
+fn internal<T: MemoryManipulation + Process>(process: T) {
+    inject(
+        &process,
+        process.pid(),
+        "/home/tom/Git/injector/examples/internal/target/debug/libinternal.so",
+    )
+    .unwrap();
 }
 
 fn external<T: MemoryManipulation>(process: T) {

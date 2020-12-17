@@ -1,6 +1,6 @@
 use crate::error::{Error, Result};
-use crate::injection::Injection;
 use crate::memory::{error::MemoryError, error::MemoryResult, MemoryManipulation};
+use crate::process::Process;
 use sysinfo::{ProcessExt, System, SystemExt};
 
 #[cfg(target_os = "linux")]
@@ -62,7 +62,7 @@ impl MemoryManipulation for ExternalManipulator {
     }
 }
 
-impl Injection for ExternalManipulator {
+impl Process for ExternalManipulator {
     fn pid(&self) -> i32 {
         self.pid
     }
@@ -105,7 +105,7 @@ impl MemoryManipulation for AnonManipulator {
     }
 }
 
-impl Injection for AnonManipulator {
+impl Process for AnonManipulator {
     fn pid(&self) -> i32 {
         self.pid
     }
