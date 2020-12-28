@@ -18,6 +18,24 @@ fn is_sub(mut haystack: &[u8], needle: &[u8]) -> Option<usize> {
     None
 }
 
+fn structure_is_sub<T: DefaultInit>(mut haystack: &[u8]) -> Option<usize> {
+    let mut offset = 0;
+    while !haystack.is_empty() {
+        let first_entry_ptr = &haystack[0] as *const u8;
+        if haystack.len() < std::mem::size_of::<T>() {
+            break;
+        }
+        if unsafe {
+            (*std::mem::transmute::<*const u8, *const T>(first_entry_ptr)).is_default_init()
+        } {
+            return Some(offset);
+        }
+        haystack = &haystack[1..];
+        offset += 1;
+    }
+    None
+}
+
 fn wildcard_is_sub(mut haystack: &[u8], needle: &[Option<u8>]) -> Option<usize> {
     if needle.len() == 0 {
         return Some(0);
@@ -47,13 +65,17 @@ fn wildcard_is_sub(mut haystack: &[u8], needle: &[Option<u8>]) -> Option<usize> 
     None
 }
 
+pub trait DefaultInit {
+    fn is_default_init(&self) -> bool;
+}
+
 pub trait MemoryManipulation {
     fn read(&self, address: usize, buf: &mut [u8]) -> MemoryResult<usize>;
     fn write(&self, address: usize, payload: &[u8]) -> MemoryResult<usize>;
-    fn read_structure<T: Clone>(&self, address: usize) -> MemoryResult<T> {
+    fn read_structure<T>(&self, address: usize) -> MemoryResult<&mut T> {
         let mut buf = vec![0_u8; std::mem::size_of::<T>()];
         self.read(address, &mut buf)?;
-        Ok(unsafe { std::mem::transmute::<*const u8, &T>(&buf[0] as *const u8) }.clone())
+        Ok(unsafe { std::mem::transmute::<*mut u8, &mut T>(&mut buf[0] as *mut u8) })
     }
     fn write_structure<T>(&self, address: usize, payload: T) -> MemoryResult<usize> {
         let payload = unsafe { std::mem::transmute::<&T, *const u8>(&payload) };
@@ -107,6 +129,22 @@ pub trait MemoryManipulation {
                     Err(_) => return None,
                 }
                 match is_sub(&mut buffer, signature) {
+                    Some(inner) => Some(addr + inner),
+                    None => None,
+                }
+            })
+    }
+    fn find_structure<T: DefaultInit>(&self, start: usize, end: usize) -> Option<usize> {
+        (start..end)
+            .step_by(std::mem::size_of::<T>() * 4) // here i cannot gurantee that i do not slice into the searched signature
+            .into_iter()
+            .find_map(|addr| {
+                let mut buffer = vec![0_u8; std::mem::size_of::<T>() * 4];
+                match self.read(addr, &mut buffer) {
+                    Ok(_) => (),
+                    Err(_) => return None,
+                }
+                match structure_is_sub::<T>(&mut buffer) {
                     Some(inner) => Some(addr + inner),
                     None => None,
                 }

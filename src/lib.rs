@@ -10,6 +10,7 @@ pub mod prelude {
     pub use crate::external::ExternalManipulator;
     pub use crate::injection::inject;
     pub use crate::internal::InternalManipulator;
+    pub use crate::memory::DefaultInit;
     pub use crate::memory::MemoryManipulation;
     pub use crate::process::Process;
 }
