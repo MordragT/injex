@@ -44,9 +44,7 @@ fn init() {
 
 #### Credit
 
-https://github.com/DavidBuchanan314/dlinject
-
-- my injection function is basically a rewrite of dlinject in rust
+- my injection function is basically a rewrite of [dlinject](https://github.com/DavidBuchanan314/dlinject) in rust
 
 #### LICENSE
 
