@@ -3,6 +3,11 @@
 - aims to provide a library in rust to alter other processes
 - at the moment only linux is supported, if i enter a state where i am satisfied with the linux implementation i will look at OpenBSD/Mac/Windows
 
+#### Links
+
+- [crate](https://crates.io/crates/injex)
+- [documentation](https://docs.rs/injex/0.1.0/injex/)
+
 #### Example
 
 ```rust
