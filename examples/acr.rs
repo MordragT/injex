@@ -1,4 +1,4 @@
-use injector::prelude::*;
+use injex::prelude::*;
 
 fn main() {
     let process = AnonManipulator::new("").unwrap();

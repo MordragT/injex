@@ -9,4 +9,4 @@ crate_type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-injector = { path = "./../../../injector" }
+injex = { path = "./../../../injex" }

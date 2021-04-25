@@ -2,6 +2,7 @@ use std::fmt;
 
 pub type MemoryResult<T> = Result<T, MemoryError>;
 
+/// Memory Error type
 #[derive(Debug)]
 pub enum MemoryError {
     InternalError(String),

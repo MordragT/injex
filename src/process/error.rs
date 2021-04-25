@@ -3,6 +3,7 @@ use std::fmt;
 
 pub type ProcessResult<T> = Result<T, ProcessError>;
 
+/// Process Error Type
 #[derive(Debug)]
 pub enum ProcessError {
     InternalError(String),

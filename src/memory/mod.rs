@@ -66,17 +66,22 @@ fn wildcard_is_sub(mut haystack: &[u8], needle: &[Option<u8>]) -> Option<usize> 
 }
 
 pub trait DefaultInit {
+    /// Returns true if the values are equal the default initialisation
     fn is_default_init(&self) -> bool;
 }
 
 pub trait MemoryManipulation {
+    /// Reads into the buffer at the given address and returns the bytes read
     fn read(&self, address: usize, buf: &mut [u8]) -> MemoryResult<usize>;
+    /// Writes the payload into the memory at the given address
     fn write(&self, address: usize, payload: &[u8]) -> MemoryResult<usize>;
+    /// Reads a generic datastructure at the given address
     fn read_structure<T>(&self, address: usize) -> MemoryResult<&mut T> {
         let mut buf = vec![0_u8; std::mem::size_of::<T>()];
         self.read(address, &mut buf)?;
         Ok(unsafe { std::mem::transmute::<*mut u8, &mut T>(&mut buf[0] as *mut u8) })
     }
+    /// Writes a generic datastructure into memory at the given address
     fn write_structure<T>(&self, address: usize, payload: T) -> MemoryResult<usize> {
         let payload = unsafe { std::mem::transmute::<&T, *const u8>(&payload) };
         self.write(address, unsafe {
@@ -117,7 +122,8 @@ pub trait MemoryManipulation {
     //         signature,
     //     )
     // }
-    /// Not guranteed to find signature, until Rust supports Tail Call Optimization cause i am lazy
+    /// Searches for the given signature between the start and end address
+    /// Not guranteed to find signature, until Rust supports Tail Call Optimization
     fn find(&self, start: usize, end: usize, signature: &[u8]) -> Option<usize> {
         (start..end)
             .step_by(std::mem::size_of_val(signature) * 4) // here i cannot gurantee that i do not slice into the searched signature
@@ -134,6 +140,8 @@ pub trait MemoryManipulation {
                 }
             })
     }
+    /// Searches for a structure with special default values
+    /// Not guranteed to find signature, until Rust supports Tail Call Optimization
     fn find_structure<T: DefaultInit>(&self, start: usize, end: usize) -> Option<usize> {
         (start..end)
             .step_by(std::mem::size_of::<T>() * 4) // here i cannot gurantee that i do not slice into the searched signature
@@ -150,7 +158,8 @@ pub trait MemoryManipulation {
                 }
             })
     }
-    /// Not guranteed to find signature, until Rust supports Tail Call Optimization cause i am lazy
+    /// Searches for a given pattern where wildcards are specified with ::
+    /// Not guranteed to find signature, until Rust supports Tail Call Optimization
     fn find_wildcard(&self, start: usize, end: usize, signature: &str) -> Option<usize> {
         let re = Regex::new(r"[[:xdigit:]][[:xdigit:]]|::").unwrap();
         let signature = re

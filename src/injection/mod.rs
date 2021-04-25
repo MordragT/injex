@@ -79,6 +79,7 @@ fn find_elf_symbol_addr(mem_map: &MemoryMap, sym_name: &str) -> Option<u64> {
         None => None,
     }
 }
+/// Injects an dynamic library into a process
 #[cfg(target_os = "linux")]
 pub fn inject<P, T>(manipulator: &T, pid: i32, library: P) -> InjectionResult<()>
 where

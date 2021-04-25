@@ -5,9 +5,15 @@ use {injector::prelude::*, std::thread};
 static INITIALIZE: fn() = init;
 
 fn init() {
-    thread::spawn(move || {
+    thread::spawn(move || -> thread::Result<()> {
         let manipulator = InternalManipulator {};
         println!("{:?}", manipulator.memory_maps());
+        let addr = match manipulator.find(0, 1024, &[0, 0, 8, 16, 32]) {
+            Some(addr) => addr,
+            None => panic!("Signature not found"),
+        };
+        manipulator.write(addr, &[255, 255, 255, 0]).unwrap();
+        Ok(())
     });
 }
 

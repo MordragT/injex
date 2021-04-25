@@ -1,18 +1,22 @@
 [package]
-name = "injector"
+name = "injex"
 version = "0.1.0"
 authors = ["MordragT <scrat_games@gmx.de>"]
 edition = "2018"
+license = "MIT"
+repository = "https://github.com/mordragt/injex.git"
+description = "Gives users the possibility to inject into and manipulate processes"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sysinfo = "0.15.3"
-regex = "1.4.2"
+sysinfo = "0.17"
+regex = "1.4"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-dynasm = "1.0.0"
-dynasmrt = "1.0.0"
-procfs = "0.9.1"
-goblin = "0.3.0"
-nix = "0.19.1"
+dynasm = "1.0"
+dynasmrt = "1.0"
+procfs = "0.9"
+goblin = "0.4"
+nix = "0.20"

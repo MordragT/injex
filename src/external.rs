@@ -15,14 +15,18 @@ use {
     },
 };
 
+/// Manipulates the process memory from the outside with system calls
+#[derive(Default, Debug, Copy, Clone, PartialEq, Eq)]
 pub struct ExternalManipulator {
     pid: i32,
 }
 
 impl ExternalManipulator {
+    /// Creates a new External Manipulator from an unchecked pid
     pub fn new_unchecked(pid: i32) -> ExternalManipulator {
         ExternalManipulator { pid }
     }
+    /// Searches for the given process name and creates an external manipulator
     pub fn new(name: &str) -> Result<ExternalManipulator> {
         let system = System::new_all();
         let process_list = system.get_process_by_name(name);
@@ -67,12 +71,15 @@ impl Process for ExternalManipulator {
         self.pid
     }
 }
+/// Manipulates the process memory from the outside with the memory mapped mem file
 #[cfg(target_os = "linux")]
+#[derive(Default, Debug, Copy, Clone, PartialEq, Eq)]
 pub struct AnonManipulator {
     pid: i32,
 }
 
 impl AnonManipulator {
+    /// Searches for the given process name and creates an anon manipulator
     pub fn new(name: &str) -> Result<AnonManipulator> {
         let system = System::new_all();
         let process_list = system.get_process_by_name(name);

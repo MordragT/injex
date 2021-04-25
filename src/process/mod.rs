@@ -9,7 +9,9 @@ use error::ProcessResult;
 pub mod error;
 
 pub trait Process {
+    /// Returns the process id
     fn pid(&self) -> i32;
+    /// Returns the Memory Maps
     #[cfg(target_os = "linux")]
     fn memory_maps(&self) -> ProcessResult<Vec<MemoryMap>> {
         let process = LinuxProcess::new(self.pid())?;

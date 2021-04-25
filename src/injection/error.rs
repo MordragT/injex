@@ -8,6 +8,7 @@ use dynasmrt::DynasmError;
 
 pub type InjectionResult<T> = Result<T, InjectionError>;
 
+/// Injection Error Type
 #[derive(Debug)]
 pub enum InjectionError {
     InternalError(String),

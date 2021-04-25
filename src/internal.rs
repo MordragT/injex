@@ -1,6 +1,8 @@
 use crate::memory::{error::MemoryResult, MemoryManipulation};
 use crate::process::Process;
 
+/// Manipulates the process memory from the inside of the process
+#[derive(Default, Debug, Copy, Clone)]
 pub struct InternalManipulator;
 
 impl MemoryManipulation for InternalManipulator {
