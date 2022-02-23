@@ -211,7 +211,7 @@ where
         ; jmp r15
 
         ; shared_object:
-        ; .bytes "/tmp/stage_two.bin\0".as_bytes()
+        ; .bytes ".stage_two.bin\0".as_bytes()
     );
 
     let shell_code_buf = ops.finalize()?;
@@ -355,7 +355,7 @@ where
         .write(true)
         .truncate(true)
         .create(true)
-        .open("/tmp/stage_two.bin")?;
+        .open(format!("/proc/{pid}/cwd/.stage_two.bin"))?;
 
     let mut perms = stage_two.metadata()?.permissions();
     perms.set_readonly(false);
