@@ -18,7 +18,7 @@ use {
 /// Manipulates the process memory from the outside with system calls
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq)]
 pub struct ExternalManipulator {
-    pid: i32,
+    pub pid: i32,
 }
 
 impl ExternalManipulator {
@@ -75,7 +75,7 @@ impl Process for ExternalManipulator {
 #[cfg(target_os = "linux")]
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq)]
 pub struct AnonManipulator {
-    pid: i32,
+    pub pid: i32,
 }
 
 impl AnonManipulator {
